@@ -22,7 +22,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
     //printf("Printing all process handles for our process in 2 seconds");
     //Sleep(2000);
     //PrintAllModules(pHandle); //For debugging
-    printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\n");
+    printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\nPress [NUMPAD 3] to make buying items from a shop take no money!(Once enabled the only way to disable is by restarting your game)\n");
 
     while (true) {
         Sleep(10); //Waits 10ms
@@ -67,15 +67,23 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
             Sleep(200);
             bool consoleCleared = helpers.clearConsole();
         }
+        if (GetAsyncKeyState(VK_NUMPAD3)) {
+            bool retval = memhack.AllShopItemsFree(pId, pHandle);
+            if (retval == FALSE) {
+                printf("failed to enabled");
+            }
+            else {
+                printf("Enabled");
+            }
+            Sleep(1000);
+            bool consoleCleared = helpers.clearConsole();
+        }
     }
 
     return 0; //returns zero closing this thread
 }
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 {
     switch (ul_reason_for_call)
     {

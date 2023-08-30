@@ -55,4 +55,18 @@ public:
             return FALSE;
         }
     }
+    bool AllShopItemsFree(DWORD pId, HANDLE pHandle) {
+        uintptr_t gameDllBaseAddr = helpers.GetModuleBaseAddress(pId, (char*)"Game.dll");
+        if (gameDllBaseAddr == 0) {
+            return FALSE;
+        }
+        uintptr_t readAddr = gameDllBaseAddr + 0x3F7E48; //Calculating where this instruction is by adding its offset to the baseaddress of game.dll
+        BYTE nop[] = { 0x90, 0x90 }; //Since in cheat engine we can see the addr we are nop has 2 bytes 2B and C7 we have to do 0x90 or nop in 2 bytes so we must do it like this. If it was just one byte we can replace the &nop with 0x90 and sizeof(nop) with 1
+        if (WriteProcessMemory(pHandle, (LPVOID)readAddr, &nop, sizeof(nop), NULL)) { //the addr specified here is the address specified to the specific instruction which removes the item from the vendor and money from you, to find addr go into cheat engine find your money (4 byte integer) right click debug find what writes to this address then go to that instruction in memory view/assembler view/decompiler and find the instruction nearby that is bytes 2B C7 instruction sub eax, the address that is assigned to that instruction is the addr needed to write too we write nop as the instruction is 2 bytes 2B and C7 so writing a single 0x90 would not work
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
+    }
 };
