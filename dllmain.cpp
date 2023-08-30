@@ -5,6 +5,8 @@ using namespace std; //Using the std namespace so we do not have to type std:: e
 
 //Variables
 bool infCarryWeightEnabled = FALSE;
+MemHacks memhack; //Creating a variable which opens the MemHacks class for us to use in this code
+helperFunctions helpers;
 
 // Your thread function
 DWORD WINAPI mainThread(LPVOID lpParam) {
@@ -25,11 +27,11 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
     while (true) {
         Sleep(10); //Waits 10ms
         if (infCarryWeightEnabled) {
-            bool retval = MemHackInfCarryWeight(pId, pHandle);
+            bool retval = memhack.InfiniteCarryWeight(pId, pHandle);
             if (!retval) { printf("Mem hack Inf carry weight FAILED!\n"); }
         }
         if (GetAsyncKeyState(VK_DELETE)) { //if the back key is pressed
-            bool shutdownRetval = shutdown(fp); //Calls our helper and gets the retval
+            bool shutdownRetval = helpers.shutdown(fp); //Calls our helper and gets the retval
             if (shutdownRetval) { //if retval true
                 break; //breaks loop
             }
@@ -39,7 +41,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
         }
         if (GetAsyncKeyState(VK_NUMPAD1)) { //If numpad one is pressed
             if (infCarryWeightEnabled == FALSE) {
-                bool retval = MemHackInfCarryWeight(pId, pHandle);
+                bool retval = memhack.InfiniteCarryWeight(pId, pHandle);
                 if (retval) {
                     infCarryWeightEnabled = TRUE;
                     printf("Enabled Infinite Carry Weight\n");
@@ -48,22 +50,22 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
                 else {
                     printf("Error failed to enable Infinite Carry Weight\n");
                 }
-                bool consoleCleared = clearConsole();
+                bool consoleCleared = helpers.clearConsole();
             }
             else {
                 infCarryWeightEnabled = FALSE;
                 printf("Infinite Carry Weight Disabled\n");
                 Sleep(1000);
-                bool consoleCleared = clearConsole();
+                bool consoleCleared = helpers.clearConsole();
             }
         }
         if (GetAsyncKeyState(VK_NUMPAD2)) {
-            bool retval = MemHackLevelUp(pId, pHandle);
+            bool retval = memhack.AddExperience(pId, pHandle);
             if (retval == FALSE) {
-                printf("Error failed to level up!\n");
+                printf("Error failed to add experience");
             }
             Sleep(200);
-            bool consoleCleared = clearConsole();
+            bool consoleCleared = helpers.clearConsole();
         }
     }
 
