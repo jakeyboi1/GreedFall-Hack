@@ -19,9 +19,6 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
     HANDLE pHandle = NULL;
     pHandle = OpenProcess(PROCESS_ALL_ACCESS, NULL, pId); //Getting our process handle for our process id
     if (pHandle == NULL) { printf("Failed to get process Handler\n"); } //Making sure it worked
-    //printf("Printing all process handles for our process in 2 seconds");
-    //Sleep(2000);
-    //PrintAllModules(pHandle); //For debugging
     printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\nPress [NUMPAD 3] to make buying items from a shop take no money!(Once enabled the only way to disable is by restarting your game)\n");
 
     while (true) {
