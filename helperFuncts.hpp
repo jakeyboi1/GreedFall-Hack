@@ -38,27 +38,8 @@ public:
         }
         return addr;
     }
-    MODULEENTRY32 GetModule(const char* moduleName, unsigned long ProcessId) {
-        MODULEENTRY32 modEntry = { 0 };
-        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, ProcessId);
-        if (hSnapshot != INVALID_HANDLE_VALUE) {
-            MODULEENTRY32 curr = { 0 };
-            curr.dwSize = sizeof(MODULEENTRY32);
-            if (Module32First(hSnapshot, &curr)) {
-                do {
-                    if (!strcmp(curr.szModule, moduleName)) {
-                        modEntry = curr;
-                        break;
-                    }
-                }
-                while (Module32Next(hSnapshot, &curr));
-            }
-            CloseHandle(hSnapshot);
-        }
-        return modEntry;
-    }
-    uintptr_t GetModuleBaseAddress(DWORD dwProcId, char* szModuleName) {
-        uintptr_t ModuleBaseAddress = 0;
+    MODULEENTRY32 GetModuleInfo(DWORD dwProcId, char* szModuleName) {
+        MODULEENTRY32 ModuleInfo{};
         HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, dwProcId);
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             MODULEENTRY32 ModuleEntry32;
@@ -66,14 +47,46 @@ public:
             if (Module32First(hSnapshot, &ModuleEntry32)) {
                 do {
                     if (strcmp(ModuleEntry32.szModule, szModuleName) == 0) {
-                        ModuleBaseAddress = (uintptr_t)ModuleEntry32.modBaseAddr;
+                        ModuleInfo = ModuleEntry32;
                         break;
                     }
-                } 
-                while (Module32Next(hSnapshot, &ModuleEntry32));
+                } while (Module32Next(hSnapshot, &ModuleEntry32));
             }
             CloseHandle(hSnapshot);
         }
-        return ModuleBaseAddress;
+        return ModuleInfo;
+    }
+    uintptr_t find_signature(char* module, const char* pattern_, const char* mask, DWORD pId, HANDLE pHandle) {
+	    const auto compare = [](const uint8_t* data, const uint8_t* pattern, const char* mask_) {
+		    for (; *mask_; ++mask_, ++data, ++pattern)
+			    if (*mask_ == 'x' && *data != *pattern)
+				    return false;
+
+		    return (*mask_) == 0;
+		};
+    
+        MODULEENTRY32 moduleInfo = GetModuleInfo(pId, module);
+	    MODULEINFO module_info = {};
+        GetModuleInformation(pHandle, moduleInfo.hModule, &module_info, sizeof MODULEINFO);
+
+	    auto module_start = uintptr_t(module_info.lpBaseOfDll);
+	    const uint8_t* pattern = reinterpret_cast<const uint8_t*>(pattern_);
+	    for (size_t i = 0; i < module_info.SizeOfImage; i++)
+		    if (compare(reinterpret_cast<uint8_t*>(module_start + i), pattern, mask))
+			    return module_start + i;
+
+	    return 0;
+    }
+    bool checkIfMemAddrIsProtected(uintptr_t addr) {
+        //This function will check if the memory addr is protected or not (useful for debugging access violation errors returns true if not protected false if it is)
+        MEMORY_BASIC_INFORMATION mbi;
+        VirtualQuery((void*)addr, &mbi, sizeof(mbi));
+        bool no_rights = (mbi.Protect & PAGE_GUARD) || (mbi.Protect & PAGE_NOACCESS);
+        if (!no_rights) {
+            return TRUE;
+        }
+        else {
+            return FALSE;
+        }
     }
 };
