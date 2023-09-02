@@ -5,6 +5,8 @@ using namespace std; //Using the std namespace so we do not have to type std:: e
 
 // Variables
 bool infCarryWeightEnabled = FALSE;
+bool infHealthEnabled = FALSE;
+bool devMode = TRUE; //Set false before building release version
 MemHacks memhack; //Creating a variable which opens the MemHacks class for us to use in this code
 helperFunctions helpers;
 GameFunctions gameFuncts;
@@ -23,7 +25,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
     HANDLE pHandle = NULL;
     pHandle = OpenProcess(PROCESS_ALL_ACCESS, NULL, pId); //Getting our process handle for our process id
     if (pHandle == NULL) { printf("Failed to get process Handler\n"); }
-    printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\nPress [NUMPAD 3] to make buying items from a shop take no money!(Once enabled the only way to disable is by restarting your game)\n");
+    printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\nPress [NUMPAD 3] to make buying items from a shop take no money!(Once enabled the only way to disable is by restarting your game)\nPress [NUMPAD 4] for infinite health!\n");
 
     
     while (true) {
@@ -33,6 +35,10 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
         if (infCarryWeightEnabled) {
             bool retval = memhack.InfiniteCarryWeight(pId, pHandle);
             if (!retval) { printf("Mem hack Inf carry weight FAILED!\n"); }
+        }
+        if (infHealthEnabled) {
+            bool retval = memhack.InfiniteHealth(pId, pHandle);
+            if (!retval) { printf("Mem hack inf health FAILED!\n"); }
         }
 
         //Exiting program
@@ -48,7 +54,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
 
         //Infinite Carry weight (Initializer)
         if (GetAsyncKeyState(VK_NUMPAD1)) { //If numpad one is pressed
-            if (infCarryWeightEnabled == FALSE) {
+            if (!infCarryWeightEnabled) {
                 bool retval = memhack.InfiniteCarryWeight(pId, pHandle);
                 if (retval) {
                     infCarryWeightEnabled = TRUE;
@@ -71,7 +77,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
         //Add experience
         if (GetAsyncKeyState(VK_NUMPAD2)) {
             bool retval = memhack.AddExperience(pId, pHandle);
-            if (retval == FALSE) {
+            if (!retval) {
                 printf("Error failed to add experience");
             }
             Sleep(200);
@@ -91,12 +97,34 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
             bool consoleCleared = helpers.clearConsole();
         }
 
-        //Tesitng
-        if (GetAsyncKeyState(VK_NUMPAD6)) {
-            auto test = gameFuncts.testy2(pId, pHandle);
-            printf("It made it back to the keypress call tf\n");
-            cout << test << endl;
+        //Infinite health
+        if (GetAsyncKeyState(VK_NUMPAD4)) {
+            if (!infHealthEnabled) {
+                bool retval = memhack.InfiniteHealth(pId, pHandle);
+                if (!retval) {
+                    printf("Error failed to enable infinite health");
+                }
+                else {
+                    printf("Infinite health enabled!");
+                    infHealthEnabled = TRUE;
+                }
+            }
+            else {
+                printf("Infinite health disabled");
+                infHealthEnabled = FALSE;
+            }
             Sleep(1000);
+            bool consoleCleared = helpers.clearConsole();
+        }
+
+        //Tesitng
+        if (devMode) {
+            if (GetAsyncKeyState(VK_NUMPAD6)) {
+                auto test = gameFuncts.testy2(pId, pHandle);
+                printf("It made it back to the keypress call tf\n");
+                cout << test << endl;
+                Sleep(1000);
+            }
         }
     }
 
