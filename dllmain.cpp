@@ -1,41 +1,52 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
+// Includes
 #include "pch.h"
 #include "stdafx.h"
 using namespace std; //Using the std namespace so we do not have to type std:: everytime
 
-//Variables
+// Variables
 bool infCarryWeightEnabled = FALSE;
 MemHacks memhack; //Creating a variable which opens the MemHacks class for us to use in this code
 helperFunctions helpers;
+GameFunctions gameFuncts;
 
 // Your thread function
 DWORD WINAPI mainThread(LPVOID lpParam) {
+    //Attaching Console
     AllocConsole(); //Allocating a console to our program
     FILE* fp; //Setting a file pointer to the var fp
     freopen_s(&fp, "CONOUT$", "w", stdout); //opens a console on our variable fp
+    
+    //Getting greedfalls process info
     DWORD pId = NULL;
     GetWindowThreadProcessId(FindWindow(NULL, "GreedFall"), &pId); //Getting the process id of the GreedFall window, and setting it the var pId
-    if (pId == NULL) { printf("Failed to get proc id\n"); } //Making sure it worked
+    if (pId == NULL) { printf("Failed to get proc id\n"); }
     HANDLE pHandle = NULL;
     pHandle = OpenProcess(PROCESS_ALL_ACCESS, NULL, pId); //Getting our process handle for our process id
-    if (pHandle == NULL) { printf("Failed to get process Handler\n"); } //Making sure it worked
+    if (pHandle == NULL) { printf("Failed to get process Handler\n"); }
     printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\nPress [NUMPAD 3] to make buying items from a shop take no money!(Once enabled the only way to disable is by restarting your game)\n");
 
+    
     while (true) {
-        Sleep(10); //Waits 10ms
+        Sleep(10);
+
+        //Infinite Carry Weight(Handler after its been enabled)
         if (infCarryWeightEnabled) {
             bool retval = memhack.InfiniteCarryWeight(pId, pHandle);
             if (!retval) { printf("Mem hack Inf carry weight FAILED!\n"); }
         }
-        if (GetAsyncKeyState(VK_DELETE)) { //if the back key is pressed
-            bool shutdownRetval = helpers.shutdown(fp); //Calls our helper and gets the retval
-            if (shutdownRetval) { //if retval true
-                break; //breaks loop
+
+        //Exiting program
+        if (GetAsyncKeyState(VK_DELETE)) { //GetAsyncKeyState is checking if a key is pressed
+            bool shutdownRetval = helpers.shutdown(fp);
+            if (shutdownRetval) {
+                break;
             }
             else {
                 printf("Shutdown Failed\n");
             }
         }
+
+        //Infinite Carry weight (Initializer)
         if (GetAsyncKeyState(VK_NUMPAD1)) { //If numpad one is pressed
             if (infCarryWeightEnabled == FALSE) {
                 bool retval = memhack.InfiniteCarryWeight(pId, pHandle);
@@ -56,6 +67,8 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
                 bool consoleCleared = helpers.clearConsole();
             }
         }
+
+        //Add experience
         if (GetAsyncKeyState(VK_NUMPAD2)) {
             bool retval = memhack.AddExperience(pId, pHandle);
             if (retval == FALSE) {
@@ -64,9 +77,11 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
             Sleep(200);
             bool consoleCleared = helpers.clearConsole();
         }
+
+        //All shop items free
         if (GetAsyncKeyState(VK_NUMPAD3)) {
             bool retval = memhack.AllShopItemsFree(pId, pHandle);
-            if (retval == FALSE) {
+            if (!retval) {
                 printf("failed to enabled");
             }
             else {
@@ -74,6 +89,14 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
             }
             Sleep(1000);
             bool consoleCleared = helpers.clearConsole();
+        }
+
+        //Tesitng
+        if (GetAsyncKeyState(VK_NUMPAD6)) {
+            auto test = gameFuncts.testy2(pId, pHandle);
+            printf("It made it back to the keypress call tf\n");
+            cout << test << endl;
+            Sleep(1000);
         }
     }
 

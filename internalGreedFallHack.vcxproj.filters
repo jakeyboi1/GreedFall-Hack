@@ -33,6 +33,9 @@
     <ClInclude Include="MemoryHacks.hpp">
       <Filter>Source Files\Features</Filter>
     </ClInclude>
+    <ClInclude Include="callingGameFuncts.hpp">
+      <Filter>Source Files\Features</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

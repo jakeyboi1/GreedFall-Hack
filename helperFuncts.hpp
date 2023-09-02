@@ -11,7 +11,7 @@ public:
         char fileName[10000]; //char array max size of 10000 (could likely work with MAX_PATH)
         for (unsigned int i = 0; i < fak / sizeof(HMODULE); i++) { //For loop over the length of fak
             GetModuleFileNameEx(recProcHandle, hArray[i], fileName, 256); //Gets the file name of the current module
-            cout << "Module Name: " << fileName << endl; //Prints it to the console
+            cout << "Module Name: " << fileName << endl;
         }
     }
     bool shutdown(FILE* fp) { //File "shuts down" the process.
@@ -19,7 +19,7 @@ public:
         if (fp != nullptr) {
             fclose(fp); //Closes the file pointer
             FreeConsole(); //closes the console
-            return TRUE; //returns true
+            return TRUE;
         }
         else {
             return FALSE;
