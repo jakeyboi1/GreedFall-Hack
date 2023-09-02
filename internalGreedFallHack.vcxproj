@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="callingGameFuncts.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="helperFuncts.hpp" />
     <ClInclude Include="MemoryHacks.hpp" />
