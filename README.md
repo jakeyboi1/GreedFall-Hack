@@ -5,6 +5,7 @@
 - Adding experience cheat to level up your character!
 - Cheat to make items in shops never run out, and not remove money from you when you buy them! (Free shop items!!)
 - Infinite Carry Weight Cheat!
+- Infinite health cheat!
 
 # Side Notes
 - I am new to game hacking, currently this is all just memory hacks, as I learn more I will likely add more
