@@ -1,4 +1,0 @@
-﻿  dllmain.cpp
-C:\C++-Stuff\internalGreedFallHack\callingGameFuncts.hpp(10,4295): warning C4566: character represented by universal-character-name '\uFFFD' cannot be represented in the current code page (1252)
-C:\C++-Stuff\internalGreedFallHack\callingGameFuncts.hpp(19,11): warning C4302: 'type cast': truncation from 'const char *' to 'char'
-  internalGreedFallHack.vcxproj -> C:\C++-Stuff\internalGreedFallHack\x64\Debug\internalGreedFallHack.dll
