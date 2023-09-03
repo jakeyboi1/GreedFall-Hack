@@ -1,0 +1,6 @@
+﻿  pch.cpp
+  dllmain.cpp
+C:\C++-Stuff\GreedFall-Hack\sourceCode\callingGameFuncts.hpp(10,4295): warning C4566: character represented by universal-character-name '\uFFFD' cannot be represented in the current code page (1252)
+C:\C++-Stuff\GreedFall-Hack\sourceCode\callingGameFuncts.hpp(19,11): warning C4302: 'type cast': truncation from 'const char *' to 'char'
+  LINK : C:\C++-Stuff\GreedFall-Hack\sourceCode\x64\Debug\internalGreedFallHack.dll not found or not built by the last incremental link; performing full link
+  internalGreedFallHack.vcxproj -> C:\C++-Stuff\GreedFall-Hack\sourceCode\x64\Debug\internalGreedFallHack.dll

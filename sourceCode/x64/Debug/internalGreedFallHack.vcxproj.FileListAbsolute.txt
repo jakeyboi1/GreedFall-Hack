@@ -1,0 +1,2 @@
+C:\C++-Stuff\internalGreedFallHack\x64\Debug\internalGreedFallHack.dll
+C:\C++-Stuff\GreedFall-Hack\sourceCode\x64\Debug\internalGreedFallHack.dll
