@@ -25,8 +25,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
     HANDLE pHandle = NULL;
     pHandle = OpenProcess(PROCESS_ALL_ACCESS, NULL, pId); //Getting our process handle for our process id
     if (pHandle == NULL) { printf("Failed to get process Handler\n"); }
-    printf("Press [NUMPAD 1] for Infinite Carry Weight!\nPress [NUMPAD 2] to add 100 experience!\nPress [NUMPAD 3] to make buying items from a shop take no money!(Once enabled the only way to disable is by restarting your game)\nPress [NUMPAD 4] for infinite health!\n");
-
+    helpers.resetConsolePrints(); //Prints the options list to the console
     
     while (true) {
         Sleep(10);
@@ -59,19 +58,17 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
                 if (retval) {
                     infCarryWeightEnabled = TRUE;
                     printf("Enabled Infinite Carry Weight\n");
-                    Sleep(1000);
                 }
                 else {
                     printf("Error failed to enable Infinite Carry Weight\n");
                 }
-                bool consoleCleared = helpers.clearConsole();
             }
             else {
                 infCarryWeightEnabled = FALSE;
                 printf("Infinite Carry Weight Disabled\n");
-                Sleep(1000);
-                bool consoleCleared = helpers.clearConsole();
             }
+            Sleep(1000);
+            helpers.resetConsolePrints(); //Prints the options list to the console
         }
 
         //Add experience
@@ -81,7 +78,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
                 printf("Error failed to add experience");
             }
             Sleep(200);
-            bool consoleCleared = helpers.clearConsole();
+            helpers.resetConsolePrints(); //Prints the options list to the console
         }
 
         //All shop items free
@@ -94,7 +91,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
                 printf("Enabled");
             }
             Sleep(1000);
-            bool consoleCleared = helpers.clearConsole();
+            helpers.resetConsolePrints(); //Prints the options list to the console
         }
 
         //Infinite health
@@ -114,7 +111,7 @@ DWORD WINAPI mainThread(LPVOID lpParam) {
                 infHealthEnabled = FALSE;
             }
             Sleep(1000);
-            bool consoleCleared = helpers.clearConsole();
+            helpers.resetConsolePrints(); //Prints the options list to the console
         }
 
         //Tesitng
