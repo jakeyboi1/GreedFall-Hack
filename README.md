@@ -17,4 +17,3 @@
 # Side Notes
 - I am new to game hacking, currently this is all just memory hacks, as I learn more I will likely add more
 - Any suggestions, help, optimizations, additions etc is very welcome!
-- If you need help open an issue on here or you can join my dev discord: https://discord.gg/C3Sb5xcBFW
